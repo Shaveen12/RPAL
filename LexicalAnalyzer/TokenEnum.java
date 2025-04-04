@@ -8,6 +8,7 @@ public enum TokenEnum {
     STRING,
     PUNCTUATION,
     DELETE,
-    EndOfTokens
+    COMMENT,
+    WHITESPACE
 }
 

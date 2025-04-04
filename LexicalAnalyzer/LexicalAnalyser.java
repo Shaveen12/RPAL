@@ -41,36 +41,35 @@ public class LexicalAnalyser {
         Pattern identifierPattern = Pattern.compile("[a-zA-Z]([a-zA-Z0-9_])*");
         Pattern integerPattern = Pattern.compile("[0-9]+");
         Pattern operatorPattern = Pattern.compile("[+\\-*/<>&.@/:=~|$!#%^_\\[\\]{}\"`\\?]+");
-        Pattern punctuationPattern = Pattern.compile("[(),;]");
-        Pattern spacesPattern = Pattern.compile("(\\s|\\t)+");
         Pattern stringPattern = Pattern.compile("'([a-zA-Z0-9+\\-*/<>&.@/:=~|$!#%^_\\[\\]{}\"`\\?(),;\\s\\\\'])*'");
+        Pattern spacesPattern = Pattern.compile("(\\s|\\t)+");
         Pattern commentPattern = Pattern.compile("//.*");
-
+        Pattern punctuationPattern = Pattern.compile("[(),;]");
+    
         int currentIndex = 0;
         while (currentIndex < line.length()) {
-            char currentChar = line.charAt(currentIndex);
-
-            Matcher spaceMatcher = spacesPattern.matcher(line.substring(currentIndex));
-            Matcher commentMatcher = commentPattern.matcher(line.substring(currentIndex));
-
-            if (commentMatcher.lookingAt()) {
-                currentIndex += commentMatcher.group().length();
-                continue;
-            }
-
-            if (spaceMatcher.lookingAt()) {
-                currentIndex += spaceMatcher.group().length();
-                continue;
-            }
-
             Matcher matcher;
-
+    
+            matcher = commentPattern.matcher(line.substring(currentIndex));
+            if (matcher.lookingAt()) {
+                tokens.add(new Token(TokenEnum.COMMENT, matcher.group()));
+                currentIndex += matcher.group().length();
+                continue;
+            }
+    
+            matcher = spacesPattern.matcher(line.substring(currentIndex));
+            if (matcher.lookingAt()) {
+                tokens.add(new Token(TokenEnum.WHITESPACE, matcher.group()));
+                currentIndex += matcher.group().length();
+                continue;
+            }
+    
             matcher = identifierPattern.matcher(line.substring(currentIndex));
             if (matcher.lookingAt()) {
                 String identifier = matcher.group();
                 List<String> keywords = List.of(
-                        "let", "in", "fn", "where", "aug", "or", "not", "gr", "ge", "ls",
-                        "le", "eq", "ne", "true", "false", "nil", "dummy", "within", "and", "rec"
+                    "let", "in", "fn", "where", "aug", "or", "not", "gr", "ge", "ls",
+                    "le", "eq", "ne", "true", "false", "nil", "dummy", "within", "and", "rec"
                 );
                 if (keywords.contains(identifier))
                     tokens.add(new Token(TokenEnum.KEYWORD, identifier));
@@ -79,36 +78,50 @@ public class LexicalAnalyser {
                 currentIndex += identifier.length();
                 continue;
             }
-
+    
             matcher = integerPattern.matcher(line.substring(currentIndex));
             if (matcher.lookingAt()) {
                 tokens.add(new Token(TokenEnum.INTEGER, matcher.group()));
                 currentIndex += matcher.group().length();
                 continue;
             }
-
+    
             matcher = operatorPattern.matcher(line.substring(currentIndex));
             if (matcher.lookingAt()) {
                 tokens.add(new Token(TokenEnum.OPERATOR, matcher.group()));
                 currentIndex += matcher.group().length();
                 continue;
             }
-
+    
             matcher = stringPattern.matcher(line.substring(currentIndex));
             if (matcher.lookingAt()) {
                 tokens.add(new Token(TokenEnum.STRING, matcher.group()));
                 currentIndex += matcher.group().length();
                 continue;
             }
-
-            matcher = punctuationPattern.matcher(Character.toString(currentChar));
+    
+            matcher = punctuationPattern.matcher(Character.toString(line.charAt(currentIndex)));
             if (matcher.matches()) {
-                tokens.add(new Token(TokenEnum.PUNCTUATION, Character.toString(currentChar)));
+                tokens.add(new Token(TokenEnum.PUNCTUATION, Character.toString(line.charAt(currentIndex))));
                 currentIndex++;
                 continue;
             }
-
-            throw new CustomException("Unable to tokenize the CHARACTER: " + currentChar + " at INDEX: " + currentIndex);
+    
+            throw new CustomException("Tokenisation error at " + line.charAt(currentIndex) + " INDEX: " + currentIndex);
         }
     }
+
+    public static List<Token> screener(List<Token> inputTokens) {
+        List<Token> filteredTokens = new ArrayList<>();
+    
+        for (Token token : inputTokens) {
+            if (token.getType() != TokenEnum.WHITESPACE && token.getType() != TokenEnum.COMMENT) {
+                filteredTokens.add(token);
+            }
+        }
+    
+        return filteredTokens;
+    }
+    
+    
 }

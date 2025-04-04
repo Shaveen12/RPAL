@@ -11,4 +11,8 @@ public class Token {
         this.value = value;
     }
 
+    public TokenEnum getType() {
+        return type;
+    }
+
 }
