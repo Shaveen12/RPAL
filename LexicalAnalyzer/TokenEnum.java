@@ -8,5 +8,6 @@ public enum TokenEnum {
     STRING,
     PUNCTUATION,
     DELETE,
+    HEAD
 }
 
