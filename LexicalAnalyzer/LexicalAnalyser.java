@@ -49,20 +49,22 @@ public class LexicalAnalyser {
         int currentIndex = 0;
         while (currentIndex < line.length()) {
             Matcher matcher;
-    
+            
+            // Comments and white spaces will be tokens of type DELETE as per lexicon
             matcher = commentPattern.matcher(line.substring(currentIndex));
             if (matcher.lookingAt()) {
-                tokens.add(new Token(TokenEnum.COMMENT, matcher.group()));
+                tokens.add(new Token(TokenEnum.DELETE, matcher.group()));
                 currentIndex += matcher.group().length();
                 continue;
             }
     
             matcher = spacesPattern.matcher(line.substring(currentIndex));
             if (matcher.lookingAt()) {
-                tokens.add(new Token(TokenEnum.WHITESPACE, matcher.group()));
+                tokens.add(new Token(TokenEnum.DELETE, matcher.group()));
                 currentIndex += matcher.group().length();
                 continue;
             }
+            
     
             matcher = identifierPattern.matcher(line.substring(currentIndex));
             if (matcher.lookingAt()) {
@@ -115,7 +117,7 @@ public class LexicalAnalyser {
         List<Token> filteredTokens = new ArrayList<>();
     
         for (Token token : inputTokens) {
-            if (token.getType() != TokenEnum.WHITESPACE && token.getType() != TokenEnum.COMMENT) {
+            if (token.getType() != TokenEnum.DELETE) {
                 filteredTokens.add(token);
             }
         }
