@@ -9,6 +9,7 @@ public enum TokenEnum {
     PUNCTUATION,
     DELETE,
     COMMENT,
-    WHITESPACE
+    WHITESPACE,
+    HEAD
 }
 

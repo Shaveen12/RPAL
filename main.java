@@ -1,7 +1,10 @@
+import java.util.ArrayList;
 import java.util.List;
 import LexicalAnalyzer.LexicalAnalyser;
 import LexicalAnalyzer.Token;
 import Exception.CustomException;
+import Parser.Parser;
+import Parser.Node;
 
 public class Main {
 
@@ -21,6 +24,12 @@ public class Main {
             List<Token> tokens = LexicalAnalyser.screener(lexicalAnalyser.scan());
             for (Token token : tokens) {
                 System.out.println("Type: " + token.type + ", Value: " + token.value);
+            }
+            Parser parser = new Parser(tokens);
+            List<Node> AST = parser.parse();
+            ArrayList<String> stringAST = parser.convertAST_toStringAST();
+            for(String string: stringAST){ 
+                System.out.println(string);
             }
         } catch (CustomException e) {
             System.out.println("An error occurred during lexical analysis: " + e.getMessage());
