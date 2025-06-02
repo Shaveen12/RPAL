@@ -10,7 +10,7 @@ import LexicalAnalyzer.TokenEnum;
 
 public class Parser {
     private List<Token> tokens;
-    private List<Node> AST; // Last element will be root of the tree
+    private List<Node> AST; 
     private ArrayList<String> stringAST;
 
     public Parser(List<Token> tokens) {
@@ -22,24 +22,17 @@ public class Parser {
     public List<Node> parse() {
         tokens.add(new Token(TokenEnum.HEAD, ""));
         System.out.println("Tokens after adding HEAD:");
-        // System.out.println(tokens);
         E();
         if (tokens.get(0).type.equals(TokenEnum.HEAD)) {
-            // System.out.println("ParsingSuccessful!...........");
+            
             return AST;
         } else {
-            System.out.println("Parsing Unsuccessful!...........");
-            System.out.println("REMAINIG UNPARSED TOKENS:");
-            for (Token token : tokens) {
-                System.out.println("<" + token.type + ", " + token.value + ">");
-            }
+            System.out.println("Parsing Unsuccessful");
             return null;
         }
     }
 
     public ArrayList<String> convertAST_toStringAST() {
-        // System.out.println("Converting AST to String.......");
-
         String dots = "";
         List<Node> stack = new ArrayList<Node>();
 
@@ -49,14 +42,11 @@ public class Parser {
                     addStrings(dots, AST.remove(AST.size() - 1));
                 } else {
                     Node node = AST.remove(AST.size() - 1);
-                    // node.noOfChildren--;
                     stack.add(node);
-                    // dots += ".";
                 }
             } else {
                 if (AST.get(AST.size() - 1).noOfChildren > 0) {
                     Node node = AST.remove(AST.size() - 1);
-                    // node.noOfChildren--;
                     stack.add(node);
                     dots += ".";
                 } else {
@@ -77,7 +67,6 @@ public class Parser {
             }
         }
 
-        // Reverse the list
         Collections.reverse(stringAST);
         return stringAST;
     }

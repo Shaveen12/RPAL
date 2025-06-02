@@ -5,6 +5,8 @@ import LexicalAnalyzer.Token;
 import Exception.CustomException;
 import Parser.Parser;
 import Parser.Node;
+import Standardizer.AST;
+import Standardizer.ASTFactory;
 
 public class Main {
 
@@ -26,11 +28,18 @@ public class Main {
                 System.out.println("Type: " + token.type + ", Value: " + token.value);
             }
             Parser parser = new Parser(tokens);
-            List<Node> AST = parser.parse();
+            parser.parse();
             ArrayList<String> stringAST = parser.convertAST_toStringAST();
             for(String string: stringAST){ 
                 System.out.println(string);
             }
+            System.out.println("AST created successfully!");
+
+            ASTFactory astFactory = new ASTFactory();
+            AST ast = astFactory.getAbstractSyntaxTree(stringAST);
+            ast.standardize();
+            ast.printAst();
+
         } catch (CustomException e) {
             System.out.println("An error occurred during lexical analysis: " + e.getMessage());
         }

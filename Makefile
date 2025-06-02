@@ -6,7 +6,7 @@ all:
 	javac -d $(BIN) $(SRC)
 
 run:
-	java -cp $(BIN) Main
+	java -cp $(BIN) Main test.txt
 
 clean:
 	rm -rf $(BIN)
