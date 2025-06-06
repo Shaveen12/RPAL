@@ -1,47 +1,44 @@
-import java.util.ArrayList;
-import java.util.List;
-import LexicalAnalyzer.LexicalAnalyser;
-import LexicalAnalyzer.Token;
-import Exception.CustomException;
-import Parser.Parser;
-import Parser.Node;
-import Standardizer.AST;
-import Standardizer.ASTFactory;
-
-public class Main {
-
-    public static void main(String[] args) {
-        String filePath;
-
-        if (args.length < 1) {
-            System.out.println("No filename given, falling back to default file: test.txt");
-            filePath = "test.txt";
-        } else {
-            System.out.println("Filename given: " + args[0]);
-            filePath = args[0];
+public class main {
+    
+    public static void main(String[] args) {  
+        String fn;
+        boolean isPrintAST=false, isPrintST=false; 
+        
+        if(args.length==0){
+            fn = "t1.txt"; 
+            isPrintAST = true;
+            isPrintST = true;
         }
-
-        try {
-            LexicalAnalyser lexicalAnalyser = new LexicalAnalyser(filePath);
-            List<Token> tokens = LexicalAnalyser.screener(lexicalAnalyser.scan());
-            for (Token token : tokens) {
-                System.out.println("Type: " + token.type + ", Value: " + token.value);
-            }
-            Parser parser = new Parser(tokens);
-            parser.parse();
-            ArrayList<String> stringAST = parser.convertAST_toStringAST();
-            for(String string: stringAST){ 
-                System.out.println(string);
-            }
-            System.out.println("AST created successfully!");
-
-            ASTFactory astFactory = new ASTFactory();
-            AST ast = astFactory.getAbstractSyntaxTree(stringAST);
-            ast.standardize();
-            ast.printAst();
-
-        } catch (CustomException e) {
-            System.out.println("An error occurred during lexical analysis: " + e.getMessage());
+        else if(args.length==3 && (
+                                    (args[0].equalsIgnoreCase("-ast") && args[1].equalsIgnoreCase("-st")) ||
+                                    (args[0].equalsIgnoreCase("-st") && args[1].equalsIgnoreCase("-ast")) 
+                                    )
+                )
+        {
+            fn = args[2];
+            isPrintAST=true;
+            isPrintST=true;
         }
+        else if(args.length==2){
+            fn=args[1];
+            if(args[0].equalsIgnoreCase("-ast")){
+                isPrintAST=true;
+            }
+            else if(args[0].equalsIgnoreCase("-st")){
+                isPrintST=true;
+            }
+            else{
+                System.out.println("Invalid Arguments Passing!");
+                return;
+            }
+        }
+        else if(args.length==1){
+            fn = args[0];
+        }
+        else{
+            System.out.println("Invalid Arguments Passing!");
+            return;
+        }
+        System.out.println(Evaluator.evaluate(fn, isPrintAST, isPrintST));  // get and print the answer
     }
 }
