@@ -1,3 +1,4 @@
+
 package LexicalAnalyzer;
 
 import java.io.BufferedReader;
@@ -11,14 +12,19 @@ import java.util.regex.Pattern;
 import Exception.CustomException;
 
 public class LexicalAnalyser {
+    // Name of the input file to be analyzed
     private String inputFileName;
+    // List to store the generated tokens
     private List<Token> tokens;
 
+    // Constructor initializes the input file name and token list
     public LexicalAnalyser(String inputFileName) {
         this.inputFileName = inputFileName;
         tokens = new ArrayList<>();
     }
 
+    // Main method to scan the input file and tokenize its contents
+    // Returns a list of tokens, throws CustomException on lexical errors
     public List<Token> scan() throws CustomException {
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFileName))) {
             String line;
@@ -26,8 +32,9 @@ public class LexicalAnalyser {
             while ((line = reader.readLine()) != null) {
                 lineCount++;
                 try {
-                    tokenizeLine(line);
+                    tokenizeLine(line); // Tokenize each line
                 } catch (CustomException e) {
+                    // Attach line number to error message for easier debugging
                     throw new CustomException(e.getMessage() + " in LINE: " + lineCount + "\nERROR in lexical_analysis.");
                 }
             }
@@ -37,7 +44,10 @@ public class LexicalAnalyser {
         return tokens;
     }
 
+    // Tokenizes a single line of input using regular expressions for each token type
+    // Throws CustomException if an unrecognized token is found
     private void tokenizeLine(String line) throws CustomException {
+        // Define regex patterns for each token type
         Pattern identifierPattern = Pattern.compile("[a-zA-Z]([a-zA-Z0-9_])*");
         Pattern integerPattern = Pattern.compile("[0-9]+");
         Pattern operatorPattern = Pattern.compile("[+\\-*/<>&.@/:=~|$!#%^_\\[\\]{}\"`\\?]+");
@@ -50,7 +60,6 @@ public class LexicalAnalyser {
         while (currentIndex < line.length()) {
             Matcher matcher;
             
-            // Comments and white spaces will be tokens of type DELETE as per lexicon
             matcher = commentPattern.matcher(line.substring(currentIndex));
             if (matcher.lookingAt()) {
                 tokens.add(new Token(TokenEnum.DELETE, matcher.group()));
@@ -69,6 +78,7 @@ public class LexicalAnalyser {
             matcher = identifierPattern.matcher(line.substring(currentIndex));
             if (matcher.lookingAt()) {
                 String identifier = matcher.group();
+                // List of reserved keywords in RPAL
                 List<String> keywords = List.of(
                     "let", "in", "fn", "where", "aug", "or", "not", "gr", "ge", "ls",
                     "le", "eq", "ne", "true", "false", "nil", "dummy", "within", "and", "rec"
@@ -109,10 +119,12 @@ public class LexicalAnalyser {
                 continue;
             }
     
+            // If no pattern matches, throw an error for unrecognized token
             throw new CustomException("Tokenisation error at " + line.charAt(currentIndex) + " INDEX: " + currentIndex);
         }
     }
 
+    // Filters out tokens of type DELETE (comments and whitespace)
     public static List<Token> screener(List<Token> inputTokens) {
         List<Token> filteredTokens = new ArrayList<>();
     

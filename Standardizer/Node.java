@@ -44,11 +44,13 @@ public class Node {
     
     public void standardize() {
         if (!this.isStandardized) {
+            // Recursively standardize all children first
             for (Node child: this.children) {
                 child.standardize();
             }
             switch (this.getData()) {
                 case "let":
+                    // Standardize 'let' to 'gamma' and 'lambda' form
                     Node temp1 = this.children.get(0).children.get(1);
                     temp1.setParent(this);
                     temp1.setDepth(this.depth+1);
@@ -61,6 +63,7 @@ public class Node {
                     this.setData("gamma");
                     break;
                 case "where":
+                    // Convert 'where' to 'let' and standardize
                     Node temp = this.children.get(0);
                     this.children.set(0, this.children.get(1));
                     this.children.set(1, temp);
@@ -68,6 +71,7 @@ public class Node {
                     this.standardize();
                     break;
                 case "function_form":
+                    // Standardize function form to nested lambdas
                     Node Ex = this.children.get(this.children.size()-1);                    
                     Node currentLambda = NodeFactory.getNode("lambda", this.depth+1, this, new ArrayList<Node>(), true);
                     this.children.add(1, currentLambda);
@@ -87,6 +91,7 @@ public class Node {
                     this.setData("=");
                     break;
                 case "lambda":
+                    // Standardize multi-argument lambda to nested lambdas
                     if (this.children.size() > 2) {
                         Node Ey = this.children.get(this.children.size()-1);
                         Node currentLambdax = NodeFactory.getNode("lambda", this.depth+1, this, new ArrayList<Node>(), true);
@@ -107,6 +112,7 @@ public class Node {
                     }
                     break;
                 case "within":
+                    // Standardize 'within' to nested 'gamma' and 'lambda' nodes
                     Node X1 = this.children.get(0).children.get(0);                    
                     Node X2 = this.children.get(1).children.get(0);
                     Node E1 = this.children.get(0).children.get(1);
@@ -131,6 +137,7 @@ public class Node {
                     this.setData("=");
                     break;
                 case "@":
+                    // Standardize '@' (application) to 'gamma' node
                     Node gamma1 = NodeFactory.getNode("gamma", this.depth+1, this, new ArrayList<Node>(), true);
                     Node e1 = this.children.get(0);
                     e1.setDepth(e1.getDepth()+1);
@@ -146,6 +153,7 @@ public class Node {
                     this.setData("gamma");
                     break;
                 case "and":
+                    // Standardize 'and' to tuple (tau) and comma nodes
                     Node comma = NodeFactory.getNode(",", this.depth+1, this, new ArrayList<Node>(), true);
                     Node tau = NodeFactory.getNode("tau",this.depth+1, this, new ArrayList<Node>(), true);
                     for (Node equal: this.children) {
@@ -160,6 +168,7 @@ public class Node {
                     this.setData("=");
                     break;                
                 case "rec":
+                    // Standardize 'rec' to Y* combinator form
                     Node X = this.children.get(0).children.get(0);
                     Node E = this.children.get(0).children.get(1);
                     Node F = NodeFactory.getNode(X.getData(), this.depth+1, this, X.children, true);
