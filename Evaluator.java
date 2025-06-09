@@ -12,27 +12,30 @@ import CSEMachine.CSEMachine;
 import CSEMachine.CSEMachineFactory;
 
 public class Evaluator {
-    public static String evaluate(String filePath, boolean isPrintAST, boolean isPrintST){
+    public static String evaluate(String filePath, boolean PrintAST) {
         try {
             LexicalAnalyser lexicalAnalyser = new LexicalAnalyser(filePath);
             List<Token> tokens = LexicalAnalyser.screener(lexicalAnalyser.scan());
-            for (Token token : tokens) {
-                System.out.println("Type: " + token.type + ", Value: " + token.value);
-            }
+            // for (Token token : tokens) {
+            // System.out.println("Type: " + token.type + ", Value: " + token.value);
+            // }
             Parser parser = new Parser(tokens);
             parser.parse();
             ArrayList<String> stringAST = parser.convertAST_toStringAST();
-            for(String string: stringAST){ 
-                System.out.println(string);
+
+            if (PrintAST) {
+                System.out.println("String AST:");
+                for (String string : stringAST) {
+                    System.out.println(string);
+                }
             }
-            System.out.println("AST created successfully!");
+            // System.out.println("AST created successfully!");
 
             ASTFactory astFactory = new ASTFactory();
             AST ast = astFactory.getAbstractSyntaxTree(stringAST);
             ast.standardize();
-            ast.printAst();
 
-            CSEMachineFactory csemfac = new CSEMachineFactory();  // create cse machine factory
+            CSEMachineFactory csemfac = new CSEMachineFactory(); // create cse machine factory
             CSEMachine csemachine = csemfac.getCSEMachine(ast);
 
             return csemachine.getAnswer();

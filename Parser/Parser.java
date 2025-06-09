@@ -21,7 +21,6 @@ public class Parser {
 
     public List<Node> parse() {
         tokens.add(new Token(TokenEnum.HEAD, ""));
-        System.out.println("Tokens after adding HEAD:");
         E();
         if (tokens.get(0).type.equals(TokenEnum.HEAD)) {
             

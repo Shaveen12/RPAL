@@ -1,32 +1,13 @@
 # RPAL Project Report
 
-**Name:** [Your Name Here]  
-**Student ID:** [Your Student ID Here]  
-
----
-
-## Table of Contents
-- [Function Prototypes and Program Structure](#function-prototypes-and-program-structure)
-- [Hierarchical Call Structure](#hierarchical-call-structure)
-- [Detailed Call Trees for Core Methods](#detailed-call-trees-for-core-methods)
+**Name:** O.L.I Athukorala, K.S.A Silva 
+**Student ID:** 220052G, 220612B
 
 ---
 
 ## Function Prototypes and Program Structure
 
-### 1. Exception
-
-**File:** Exception/CustomException.java
-```java
-public class CustomException extends Exception {
-    public CustomException();
-    public CustomException(String message);
-    public CustomException(String message, Throwable cause);
-    public CustomException(Throwable cause);
-}
-```
-
-### 2. LexicalAnalyzer
+### 1. LexicalAnalyzer
 
 **Files:** LexicalAnalyzer/LexicalAnalyser.java, Token.java, TokenEnum.java
 ```java
@@ -46,7 +27,7 @@ public enum TokenEnum {
 }
 ```
 
-### 3. Parser
+### 2. Parser
 
 **Files:** Parser/Parser.java, Node.java, NodeEnum.java
 ```java
@@ -65,7 +46,7 @@ public enum NodeEnum {
 }
 ```
 
-### 4. Standardizer
+### 3. Standardizer
 
 **Files:** Standardizer/ASTFactory.java, AST.java, NodeFactory.java, Node.java
 ```java
@@ -101,7 +82,7 @@ public class Node {
 }
 ```
 
-### 5. CSEMachine
+### 4. CSEMachine
 
 **Files:** CSEMachine/CSEMachineFactory.java, CSEMachine.java
 ```java
@@ -133,11 +114,6 @@ public class CSEMachine {
 }
 ```
 
-### 6. Symbols
-
-**Files:** Symbols/*.java (B, Beta, Bool, Bop, Delta, Dummy, Environment, Err, Eta, Gamma, Id, Int, Lambda, Rand, Rator, Str, Symbol, Tau, Tup, Uop, Ystar)
-
-(Classes in this folder are simple data structures, typically with constructors and getter/setter methods.)
 
 ---
 
@@ -268,9 +244,4 @@ CSEMachine.getAnswer() : String
 
 ---
 
-**To convert this markdown to PDF:**  
-You can use tools like VS Code extensions, Pandoc, or online markdown-to-PDF converters.
 
----
-
-*End of Report*

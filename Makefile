@@ -2,13 +2,14 @@ BIN = bin
 SRC = myrpal.java Evaluator.java Exception/CustomException.java LexicalAnalyzer/LexicalAnalyser.java LexicalAnalyzer/Token.java LexicalAnalyzer/TokenEnum.java Parser/Parser.java Parser/Node.java Parser/NodeEnum.java 
 
 all:
-	mkdir -p $(BIN)
-	javac -d $(BIN) $(SRC)
+	javac $(SRC)
 
-run: all
-	java -cp $(BIN) myrpal $(file)
+run:
+	java myrpal $(file)
 
-# Allow running with: make run file=test1.txt
+run-ast:
+	java myrpal -ast $(file)
+
 
 clean:
-	rm -rf $(BIN)
+	find . -name "*.class" -delete
